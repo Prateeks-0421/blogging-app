@@ -31,7 +31,7 @@ app.use("/" , staticroute ) ;
 app.use("/user" , userrouter ) ; 
 app.use("/blog" ,   blogrouter ) ; 
 
-const PORT = 8000 ; 
+const PORT = process.env.PORT || 8000 ; 
 
 app.listen(PORT , () => {
  
