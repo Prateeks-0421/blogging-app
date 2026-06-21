@@ -9,7 +9,8 @@ function setuser(user){
         name : user.name , 
         _id : user._id , 
         email : user.email , 
-        role : user.role 
+        role : user.role , 
+        profileimageurl : user.profileimageurl , 
     } , secretkey ) ; 
 }
 

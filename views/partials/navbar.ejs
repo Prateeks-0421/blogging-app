@@ -1,5 +1,20 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+      
+             <% if(locals.user){%>
+          
+     <img
+  src="<%= locals.user.profileimageurl %>"
+  class="rounded-circle me-2"
+  width="40"
+  height="40"
+  style="object-fit: cover; cursor:pointer;"
+  data-bs-toggle="modal"
+  data-bs-target="#profileModal"
+>
+              
+
+    <% } %>
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Blogify</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,9 +30,14 @@
           <a class="nav-link" href="/blog/add-new">Add Blog</a>
         </li> 
         <% } %>
-              
+                 
+
              <% if(locals.user){%>
+
+              
+                       
               <li class="nav-item dropdown">
+                
           <a class="nav-link dropdown-toggle" href="/login" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <%= locals.user.name %>
             </a>
@@ -25,7 +45,8 @@
             <li><a class="dropdown-item" href="/logout">logout</a></li>
             <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
                 </ul>
-        </li>
+        </li>  
+
             <% } else {%>
                   <li class="nav-item">
              <a class="nav-link" href="/signup">create account</a>
