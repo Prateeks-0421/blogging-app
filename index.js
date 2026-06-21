@@ -7,9 +7,10 @@ const mongoose = require("mongoose")  ;
 const cookieparser = require("cookie-parser") ; 
 const {checkauth , restrictto} = require("./middlewares/auth") ; 
 const {blogrouter} = require("./routes/blog") ; 
+require("dotenv").config();
 // const path = require("path") ; 
 
-mongoose.connect("mongodb://127.0.0.1:27017/blogging-app").then(() =>{
+mongoose.connect(process.env.MONGO_URL).then(() =>{
     console.log("connected to mongodb") ; 
 }).catch(() =>{
     console.log("error connecting mongodb ") ; 
