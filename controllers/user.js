@@ -90,7 +90,7 @@ async function handleusersignup(req , res ){
  const user = await users.create({
     name : body.name , 
     email : body.email , 
-     profileimageurl :  `/newuploads/${req.file.filename}` , 
+     profileimageurl :  req.file.path , 
     password : hashedpassword
  } ) ; 
 
