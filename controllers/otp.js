@@ -28,7 +28,7 @@ await user.save() ;
 
 const token = setuser(user) ;
 
-res.cookie("uid" , token ) ;
+res.cookie("token" , token ) ;
 
 // res.render("home" ,  { user : req.user }) ; 
 res.redirect("/") ; 
