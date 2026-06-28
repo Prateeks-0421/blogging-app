@@ -40,7 +40,7 @@ const user = await users.findOne({
         "https://api.brevo.com/v3/smtp/email",
         {
           sender: {
-            name: "URL Shortener",
+            name: "Blogging Application",
             email: "peekingsurfers01@gmail.com"
           },
           to: [
