@@ -1,6 +1,7 @@
 const {users} = require("../models/user") ; 
 const bcrypt = require("bcrypt") ; 
 const axios = require("axios") ; 
+const {client} = require("../client.js") ; 
 async function handleuserlogin(req , res ){
 
    const body = req.body ; 
@@ -29,10 +30,12 @@ const user = await users.findOne({
 
    const otp = Math.floor(  100000 + Math.random() * 900000 ).toString(); 
 
-    user.otp = otp;
-    user.otpexpiry =  Date.now() + 5*60*1000;
+    // user.otp = otp;
+    // user.otpexpiry =  Date.now() + 5*60*1000;
 
-    await user.save();
+    // await user.save();
+
+    await client.set(`otp:${user.email}` , otp ,  { EX: 300 } ) ; 
 
     try {
     
@@ -77,7 +80,7 @@ async function handleusersignup(req , res ){
 
  const body = req.body ; 
 
- console.log(req.files);
+ console.log(req.file);
 
  if( !body.name || !body.email || !body.password ) {
     return res.render("signup" , { error : "all fields are required "}  ) ; 
@@ -90,16 +93,16 @@ async function handleusersignup(req , res ){
  const user = await users.create({
     name : body.name , 
     email : body.email , 
-     profileimageurl :  req.file.path , 
+     profileimageurl :  req.file?.path , 
     password : hashedpassword
  } ) ; 
 
 } 
 catch(error){
-
+     
+   console.log(error) ;
     return res.render("signup" , { error : "user already registered "}  ) ;
-
-    // console.log(error) ; 
+ 
 }
 
 //  await users.save() ; 
