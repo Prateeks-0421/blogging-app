@@ -6,6 +6,7 @@ const multer = require("multer") ;
 const path = require("path") ; 
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../services/cloudinary");
+const {ratelimiterlogin} = require("../middlewares/ratelimiter") ; 
 
 // const storage2 = multer.diskStorage({
 //   destination: function (req, file, cb) {
@@ -27,7 +28,7 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-userrouter.post("/login" , handleuserlogin ) ; 
+userrouter.post("/login" , ratelimiterlogin ,  handleuserlogin ) ; 
 userrouter.post("/signup" ,  upload.single("profileimage") , handleusersignup ) ; 
 
 module.exports = { userrouter } ; 
