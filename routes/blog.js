@@ -7,6 +7,7 @@ const {comments} = require("../models/comment") ;
 const {checkauth , restrictto} = require("../middlewares/auth") ; 
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../services/cloudinary");
+const {ratelimiterlogin , ratelimitercomments , ratelimiteraddblogs} = require("../middlewares/ratelimiter")
 
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
@@ -38,7 +39,11 @@ blogrouter.get("/add-new" , restrictto ,  (req , res ) => {
 
 
 
-blogrouter.post("/" , upload.single("coverimage") , async ( req , res ) => {
+blogrouter.post("/" , ratelimiteraddblogs , upload.single("coverimage") , async ( req , res ) => {
+
+  if(!req.body.title || !req.body.body || !req.file.path){
+    res.redirect("/blog/add-new"); 
+  }
 
     const blog = await blogs.create({
       title : req.body.title ,
@@ -67,9 +72,13 @@ blogrouter.get(`/:id` , async (req, res ) => {
 
 }) ; 
 
-blogrouter.post("/comment/:id" , restrictto , async ( req , res ) => {
+blogrouter.post("/comment/:id" ,  restrictto , ratelimitercomments  , async ( req , res ) => {
 
 const body = req.body ; 
+
+if(!body.content) {
+ return res.redirect(`/blog/${req.params.id}`) ; 
+}
 
 const comment = await comments.create({
   content : body.content , 
