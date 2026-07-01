@@ -1,14 +1,22 @@
 const {client}= require('../client.js') ; 
 
-// function ratelimiter(rate, timeduration) {
+async function ratelimiteraddblogs(req , res , next ){
 
-//     return async (req, res, next) => {
- 
-//         const count = await client.get("")
+ const count = await client.get(`blogs:${req.ip}`) ; 
 
-//         next();
-//     };
-// }
+if(!count){
+    await client.set(`blogs:${req.ip}` , 1 , { EX : 86400 }) ; 
+    return next() ; 
+}
+const newcount = await client.incr(`blogs:${req.ip}`) ; 
+
+ if( newcount > 10 ) {
+    return res.status(429).json({ error : "too many blogs in a single day ."}) ; 
+ }
+
+ next() ; 
+
+}
 
 async function ratelimiterlogin(req , res , next ){
 
@@ -27,6 +35,25 @@ const newcount = await client.incr(`login:${req.ip}`) ;
  next() ; 
 
 }
-// ok now i want to study ip address which is connected with backend
 
-module.exports = {ratelimiterlogin} ; 
+async function ratelimitercomments(req , res , next ){
+
+ const count = await client.get(`comment:${req.ip}`) ; 
+
+if(!count){
+    await client.set(`comment:${req.ip}` , 1 , { EX : 300 }) ; 
+    return next() ; 
+}
+const newcount = await client.incr(`comment:${req.ip}`) ; 
+
+ if( newcount > 10 ) {
+    return res.status(429).json({ error : "too many comments in a short time "}) ; 
+ }
+
+ next() ; 
+
+}
+
+
+
+module.exports = {ratelimiterlogin , ratelimitercomments , ratelimiteraddblogs} ; 
